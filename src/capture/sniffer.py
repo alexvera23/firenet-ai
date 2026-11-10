@@ -50,7 +50,7 @@ CSV_HEADERS = [
 class DatasetCollector:
     def __init__(self, scenario_id="E0", label=0, run_id="RUN_001",
                  output_path=DEFAULT_DATASET_PATH, window_seconds=2.0,
-                 attacker_ips=None, client_ips=None):
+                 attacker_ips=None, client_ips=None, save_pcap=None):
         self.scenario_id = scenario_id
         self.default_label = label
         self.run_id = run_id
@@ -60,6 +60,12 @@ class DatasetCollector:
         self.attacker_ips = set(attacker_ips or ["10.0.3.10", "192.168.30.2", "fd00:3::10"])
         self.client_ips = set(client_ips or ["10.0.1.10", "192.168.10.2", "fd00:1::10"])
         self.collected_rows = []
+        self.save_pcap = save_pcap
+        self.pcap_writer = None
+        if self.save_pcap:
+            os.makedirs(os.path.dirname(os.path.abspath(self.save_pcap)), exist_ok=True)
+            from scapy.utils import PcapWriter
+            self.pcap_writer = PcapWriter(self.save_pcap, append=True, sync=True)
 
     def _extract_tcp_flags(self, packet):
         flags = set()
@@ -134,6 +140,11 @@ class DatasetCollector:
 
         self.extractor.process_packet(pkt_metadata)
         self.total_packets_seen += 1
+        if self.pcap_writer:
+            try:
+                self.pcap_writer.write(packet)
+            except Exception:
+                pass
 
         print(f"\r[*] Capturando [{self.scenario_id}|{self.run_id}] - Pkts: {self.total_packets_seen} | Flujos activos: {len(self.extractor.flows)}", end="", flush=True)
 
@@ -158,6 +169,13 @@ class DatasetCollector:
         return self.default_label
 
     def flush_flows(self, force_all=True):
+        if self.pcap_writer:
+            try:
+                self.pcap_writer.close()
+            except Exception:
+                pass
+            self.pcap_writer = None
+
         extracted = self.extractor.extract_features(force_all=force_all)
         rows_to_save = []
 
@@ -219,6 +237,10 @@ def main():
                         help=f"Ruta del archivo CSV de destino (default: {DEFAULT_DATASET_PATH})")
     parser.add_argument("--bpf", default="",
                         help="Filtro BPF opcional para Scapy (ej. 'ip or ip6')")
+    parser.add_argument("--offline", "--pcap", dest="pcap", default=None,
+                        help="Ruta a un archivo .pcap para procesamiento offline")
+    parser.add_argument("--save-pcap", default=None,
+                        help="Ruta de archivo .pcap donde guardar los paquetes crudos capturados")
 
     args = parser.parse_args()
 
@@ -239,7 +261,8 @@ def main():
         label=label,
         run_id=run_id,
         output_path=args.output,
-        window_seconds=args.window
+        window_seconds=args.window,
+        save_pcap=args.save_pcap
     )
 
     print("=" * 60)
@@ -247,21 +270,26 @@ def main():
     print("=" * 60)
     print(f" Escenario     : {args.scenario} (Label={label})")
     print(f" Run ID        : {run_id}")
-    print(f" Interfaz      : {args.interface or 'Default / Any'}")
-    print(f" Timeout       : {args.timeout}s" if args.timeout > 0 else " Timeout       : Indefinido (Ctrl+C)")
+    print(f" Origen        : {args.pcap or args.interface or 'Default / Any (Live)'}")
+    print(f" Timeout       : {args.timeout}s" if (args.timeout > 0 and not args.pcap) else " Timeout       : N/A")
     print(f" Destino CSV   : {args.output}")
+    if args.save_pcap:
+        print(f" Guardar PCAP  : {args.save_pcap}")
     print("=" * 60)
 
     sniff_kwargs = {
         'prn': collector.process_packet,
         'store': 0
     }
-    if args.interface:
-        sniff_kwargs['iface'] = args.interface
-    if args.bpf:
-        sniff_kwargs['filter'] = args.bpf
-    if args.timeout > 0:
-        sniff_kwargs['timeout'] = args.timeout
+    if args.pcap:
+        sniff_kwargs['offline'] = args.pcap
+    else:
+        if args.interface:
+            sniff_kwargs['iface'] = args.interface
+        if args.bpf:
+            sniff_kwargs['filter'] = args.bpf
+        if args.timeout > 0:
+            sniff_kwargs['timeout'] = args.timeout
 
     try:
         sniff(**sniff_kwargs)

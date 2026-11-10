@@ -1,0 +1,4 @@
+{
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+  "vscode-pydata-viewer.pythonPath": "${workspaceFolder}/.venv/bin/python"
+}

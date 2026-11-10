@@ -32,6 +32,7 @@ class FlowExtractor:
         })
         # Mapeo de búsqueda bidireccional: tupla ordenada -> clave canónica
         self.lookup_map = {}
+        self.last_seen_time = None
 
     def _resolve_flow_key(self, src_ip, dst_ip, src_port, dst_port, protocol):
         """
@@ -77,6 +78,7 @@ class FlowExtractor:
         now = pkt_metadata.get('timestamp', time.time())
         length = pkt_metadata.get('length', 0)
 
+        self.last_seen_time = max(self.last_seen_time or 0, now)
         flow_key, is_forward = self._resolve_flow_key(src_ip, dst_ip, src_port, dst_port, protocol)
         flow = self.flows[flow_key]
 
@@ -103,13 +105,13 @@ class FlowExtractor:
 
         return flow_key
 
-    def extract_features(self, force_all=False):
+    def extract_features(self, force_all=False, current_time=None):
         """
         Calcula el vector de características para cada flujo activo o expirado.
         Retorna una lista de tuplas: (flow_key, features_dict)
         """
         dataset_rows = []
-        now = time.time()
+        now = current_time or self.last_seen_time or time.time()
         keys_to_remove = []
 
         for key, f in list(self.flows.items()):

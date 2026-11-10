@@ -4,3 +4,5 @@ data/raw/*
 data/processed/*
 models/*.pkl
 .env
+.venv/
+.pytest_cache/

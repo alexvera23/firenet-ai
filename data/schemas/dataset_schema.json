@@ -1,0 +1,105 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FireNet-AI Flow Dataset Schema",
+  "description": "Esquema formal de variables para el dataset de flujos de red de FireNet-AI (Fase 2)",
+  "type": "object",
+  "properties": {
+    "flow_id": {
+      "type": "string",
+      "description": "Identificador canónico bidireccional del flujo (src_ip:src_port->dst_ip:dst_port/proto)"
+    },
+    "run_id": {
+      "type": "string",
+      "description": "Identificador de la corrida experimental (ej. RUN_E0_01, RUN_001)"
+    },
+    "scenario_id": {
+      "type": "string",
+      "enum": ["E0", "E1", "E2", "E3", "E4", "E5"],
+      "description": "Código del escenario de tráfico (E0: Benigno, E1: Scan, E2: Bruteforce, E3: DDoS, E4: Exfiltration, E5: Stealth)"
+    },
+    "ip_version": {
+      "type": "integer",
+      "enum": [4, 6],
+      "description": "Versión del protocolo IP (4 o 6)"
+    },
+    "protocol": {
+      "type": "integer",
+      "description": "Número de protocolo IANA (6: TCP, 17: UDP, 1: ICMP, 58: ICMPv6)"
+    },
+    "duration": {
+      "type": "number",
+      "minimum": 0.0001,
+      "description": "Duración total del flujo en segundos"
+    },
+    "packets": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Número total de paquetes observados en ambas direcciones"
+    },
+    "bytes": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Volumen total de bytes transportados"
+    },
+    "pps": {
+      "type": "number",
+      "minimum": 0.0,
+      "description": "Tasa de paquetes por segundo (packets / duration)"
+    },
+    "bps": {
+      "type": "number",
+      "minimum": 0.0,
+      "description": "Tasa de bits por segundo ((bytes * 8) / duration)"
+    },
+    "pkts_fwd": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Cantidad de paquetes en la dirección de inicio (Forward)"
+    },
+    "pkts_rev": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Cantidad de paquetes en la dirección de retorno (Reverse)"
+    },
+    "ratio_pkts": {
+      "type": "number",
+      "minimum": 0.0,
+      "description": "Razón de paquetes directos contra inversos (pkts_fwd / max(pkts_rev, 1))"
+    },
+    "mean_pkt_size": {
+      "type": "number",
+      "minimum": 0.0,
+      "description": "Tamaño medio de paquete en bytes (bytes / packets)"
+    },
+    "src_port": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 65535,
+      "description": "Puerto de origen del flujo"
+    },
+    "dst_port": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 65535,
+      "description": "Puerto de destino del flujo"
+    },
+    "syn_flag": {
+      "type": "integer",
+      "enum": [0, 1],
+      "description": "Bandera binaria que indica si se observó flag SYN en el flujo"
+    },
+    "label": {
+      "type": "integer",
+      "enum": [0, 1],
+      "description": "Etiqueta supervisada de clasificación (0: Tráfico Benigno, 1: Tráfico Malicioso / Ataque)"
+    }
+  },
+  "required": [
+    "flow_id", "run_id", "scenario_id",
+    "ip_version", "protocol", "duration",
+    "packets", "bytes", "pps", "bps",
+    "pkts_fwd", "pkts_rev", "ratio_pkts",
+    "mean_pkt_size", "src_port", "dst_port",
+    "syn_flag", "label"
+  ]
+}
