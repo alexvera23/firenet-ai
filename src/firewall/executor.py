@@ -19,7 +19,7 @@ import subprocess
 from typing import Optional, List, Dict, Any, Callable
 from pathlib import Path
 
-from src.policy.engine import DynamicRule
+from src.models import DynamicRule
 
 logger = logging.getLogger(__name__)
 
