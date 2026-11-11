@@ -1,0 +1,50 @@
+{
+  "timestamp": "2026-11-11T11:37:23.556156",
+  "mode": "adaptive",
+  "scenarios": {
+    "E0": {
+      "scenario": "E0",
+      "target_label": 0,
+      "duration_sec": 3.161,
+      "latency_pre_ms": 0.04,
+      "latency_post_ms": 0.039,
+      "cpu_avg_pct": 4.15,
+      "ram_avg_mb": 12066.88,
+      "dynamic_rules_active": 0,
+      "blocked": false
+    },
+    "E1": {
+      "scenario": "E1",
+      "target_label": 1,
+      "duration_sec": 0.9738,
+      "latency_pre_ms": 0.044,
+      "latency_post_ms": 0.041,
+      "cpu_avg_pct": 2.5,
+      "ram_avg_mb": 12061.69,
+      "dynamic_rules_active": 0,
+      "blocked": false
+    },
+    "E2": {
+      "scenario": "E2",
+      "target_label": 1,
+      "duration_sec": 1.0543,
+      "latency_pre_ms": 0.028,
+      "latency_post_ms": 0.043,
+      "cpu_avg_pct": 2.3,
+      "ram_avg_mb": 12073.74,
+      "dynamic_rules_active": 0,
+      "blocked": false
+    },
+    "E3": {
+      "scenario": "E3",
+      "target_label": 1,
+      "duration_sec": 0.0416,
+      "latency_pre_ms": 0.042,
+      "latency_post_ms": 0.042,
+      "cpu_avg_pct": 3.1,
+      "ram_avg_mb": 12149.31,
+      "dynamic_rules_active": 0,
+      "blocked": false
+    }
+  }
+}

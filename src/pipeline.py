@@ -30,7 +30,8 @@ import pandas as pd
 import numpy as np
 
 from src.features.extractor import FlowExtractor
-from src.policy.engine import PolicyEngine, PolicyAction, DynamicRule, PolicyDecision
+from src.models import DynamicRule
+from src.policy.engine import PolicyEngine, PolicyAction, PolicyDecision
 from src.firewall.executor import NftablesExecutor
 
 try:
