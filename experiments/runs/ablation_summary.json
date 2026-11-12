@@ -1,0 +1,29 @@
+{
+  "A1": {
+    "ablation": "A1_no_temporal",
+    "features_count": 11,
+    "impact": "Degradaci\u00f3n en detecci\u00f3n de ataques volum\u00e9tricos sin tasa de paquetes"
+  },
+  "A3": {
+    "ablation": "A3_no_persistence",
+    "first_observation_action": "ALERT",
+    "impact": "Incremento de falsos positivos debido a bloqueos ante anomal\u00edas transitorias"
+  },
+  "A4": {
+    "ablation": "A4_threshold_sweep",
+    "sweep": {
+      "0.5": "ALERT",
+      "0.7": "ALERT",
+      "0.85": "ALERT",
+      "0.9": "OBSERVE",
+      "0.95": "OBSERVE"
+    },
+    "optimal_threshold": 0.85
+  },
+  "A6": {
+    "ablation": "A6_ipv4_vs_ipv6",
+    "samples_ipv4": 1973,
+    "samples_ipv6": 1933,
+    "feature_parity": true
+  }
+}

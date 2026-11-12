@@ -35,7 +35,13 @@ class PolicyEngine:
     def __init__(
         self,
         min_score: float = 0.85,
-        protected_ips: Optional[Set[str]] = None,
+        protected_ips: Optional[Set[{
+    "10.0.1.1", "10.0.2.1", "10.0.3.1",  # Interfaces del Gateway
+    "10.0.2.10",                         # Servidor Target IPv4
+    "fd00:1::1", "fd00:2::1", "fd00:3::1", # Gateways IPv6
+    "fd00:2::10",                        # Servidor Target IPv6
+    "192.168.10.1", "192.168.20.1"       # Compatibilidad tests unitarios
+}]] = None,
         protected_ports: Optional[Set[int]] = None,
         max_rules_per_min: int = 10,
         cooldown_seconds: int = 5,

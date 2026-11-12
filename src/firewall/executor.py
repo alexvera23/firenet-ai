@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 class NftablesExecutor:
     def __init__(
         self,
-        table: str = "firenet_table",
+        table: str = "firenet",
         family: str = "inet",
         chain: str = "dynamic_rules",
         netns: Optional[str] = None,
@@ -114,15 +114,13 @@ class NftablesExecutor:
 
     def ensure_chain_exists(self) -> bool:
         """
-        Asegura idempotentemente la existencia de la tabla y la cadena dinámica en nftables.
+        Asegura idempotentemente la existencia de la tabla y la cadena dinámica regular en nftables.
         """
         try:
-            # Crear tabla si no existe
             self._execute(["nft", "add", "table", self.family, self.table], check=True)
-            # Crear cadena dynamic_rules si no existe
-            chain_spec = "{ type filter hook forward priority -1; policy accept; }"
+            # Declarar como cadena regular (el salto viene desde base_forward en nftables.conf)
             self._execute(
-                ["nft", "add", "chain", self.family, self.table, self.chain, chain_spec],
+                ["nft", "add", "chain", self.family, self.table, self.chain],
                 check=True
             )
             logger.info(f"[NFT] Tabla {self.family} {self.table} y cadena {self.chain} inicializadas.")
@@ -140,22 +138,21 @@ class NftablesExecutor:
         proto = rule.protocol.lower() if rule.protocol else "tcp"
         comment_str = f"firenet_id={rule.rule_id} timeout={rule.ttl}s"
 
-        # Construcción estrictamente tokenizada
         tokens = [
             "nft", "add", "rule",
             self.family, self.table, self.chain,
             ip_ver, "saddr", str(rule.src_ip)
         ]
 
-        # Puerto destino y protocolo
+        # Puerto destino y protocolo (sintaxis válida para nftables inet)
         if rule.dst_port and rule.dst_port > 0:
             if proto in ("tcp", "udp"):
                 tokens.extend([proto, "dport", str(rule.dst_port)])
         elif proto in ("tcp", "udp"):
-            tokens.append(proto)
+            tokens.extend(["meta", "l4proto", proto])
 
-        # Acción (drop / reject) y comentario
-        tokens.extend([rule.action.lower(), "comment", comment_str])
+        # Comillas dobles literales alrededor del comentario para el lexer de nft
+        tokens.extend([rule.action.lower(), "comment", f'"{comment_str}"'])
 
         with self._lock:
             try:

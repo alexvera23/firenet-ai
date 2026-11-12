@@ -1,0 +1,115 @@
+{
+  "timestamp": "2026-11-12T10:29:45.559423",
+  "mode": "adaptive",
+  "tag": null,
+  "scenarios": {
+    "E0": {
+      "scenario": "E0",
+      "target_label": 0,
+      "duration_sec": 3.533,
+      "time_to_block_sec": 0.279,
+      "dynamic_rules_active": 1,
+      "rule_installed": true,
+      "traffic_blocked": null,
+      "false_positive": true,
+      "latency_pre_ms": 0.031,
+      "latency_post_ms": 0.044,
+      "latency_post_p95_ms": 0.117,
+      "client_loss_post_pct": 0.0,
+      "cpu_avg_pct": 20.1,
+      "ram_avg_mb": 9753.94,
+      "rules": [
+        {
+          "rule_id": "rule_1794500992_10_0_1_10",
+          "src": "10.0.1.10",
+          "proto": "udp",
+          "dport": 9999
+        }
+      ]
+    },
+    "E1": {
+      "scenario": "E1",
+      "target_label": 1,
+      "duration_sec": 1.03,
+      "time_to_block_sec": 0.28,
+      "dynamic_rules_active": 1,
+      "rule_installed": true,
+      "traffic_blocked": true,
+      "false_positive": null,
+      "latency_pre_ms": 0.035,
+      "latency_post_ms": 0.029,
+      "latency_post_p95_ms": 0.032,
+      "client_loss_post_pct": 0.0,
+      "cpu_avg_pct": 7.8,
+      "ram_avg_mb": 9755.47,
+      "rules": [
+        {
+          "rule_id": "rule_1794501005_10_0_3_10",
+          "src": "10.0.3.10",
+          "proto": "tcp",
+          "dport": 20
+        }
+      ]
+    },
+    "E2": {
+      "scenario": "E2",
+      "target_label": 1,
+      "duration_sec": 1.265,
+      "time_to_block_sec": 0.014,
+      "dynamic_rules_active": 2,
+      "rule_installed": true,
+      "traffic_blocked": true,
+      "false_positive": null,
+      "latency_pre_ms": 0.044,
+      "latency_post_ms": 0.03,
+      "latency_post_p95_ms": 0.048,
+      "client_loss_post_pct": 0.0,
+      "cpu_avg_pct": 7.65,
+      "ram_avg_mb": 9712.79,
+      "rules": [
+        {
+          "rule_id": "rule_1794501010_10_0_3_10",
+          "src": "10.0.3.10",
+          "proto": "tcp",
+          "dport": 57
+        },
+        {
+          "rule_id": "rule_1794501015_10_0_3_10",
+          "src": "10.0.3.10",
+          "proto": "tcp",
+          "dport": 76
+        }
+      ]
+    },
+    "E3": {
+      "scenario": "E3",
+      "target_label": 1,
+      "duration_sec": 0.265,
+      "time_to_block_sec": 1.28,
+      "dynamic_rules_active": 2,
+      "rule_installed": true,
+      "traffic_blocked": null,
+      "false_positive": null,
+      "latency_pre_ms": 0.037,
+      "latency_post_ms": 0.036,
+      "latency_post_p95_ms": 0.087,
+      "client_loss_post_pct": 0.0,
+      "cpu_avg_pct": 0.4,
+      "ram_avg_mb": 9693.88,
+      "rules": [
+        {
+          "rule_id": "rule_1794501030_10_0_3_10",
+          "src": "10.0.3.10",
+          "proto": "udp",
+          "dport": 443
+        },
+        {
+          "rule_id": "rule_1794501030_10_0_2_10",
+          "src": "10.0.2.10",
+          "proto": null,
+          "dport": null
+        }
+      ]
+    }
+  }
+}

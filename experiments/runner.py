@@ -18,7 +18,7 @@ import psutil
 RESULTS_DIR = "experiments/runs"
 TARGET_IP = "10.0.2.10"
 PIPELINE_MATCH = "src/pipeline.py"
-NFT_CHAIN = ["inet", "firenet_table", "dynamic_rules"]
+NFT_CHAIN = ["inet", "firenet", "dynamic_rules"]
 SETTLE_SEC = 1.0
 COOLDOWN_WAIT = 6  # > cooldown_seconds (5) del PolicyEngine
 POLL_SEC = 0.25

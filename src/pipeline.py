@@ -58,7 +58,7 @@ class LiveInferencePipeline:
         metadata_path: Union[str, Path] = PROJECT_ROOT / "models" / "model_metadata.json",
         audit_log_path: Union[str, Path] = PROJECT_ROOT / "logs" / "audit.jsonl",
         netns: Optional[str] = None,
-        table: str = "firenet_table",
+        table: str = "firenet",
         family: str = "inet",
         chain: str = "dynamic_rules",
         dry_run: bool = False,
